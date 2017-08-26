@@ -51,6 +51,7 @@ console.log(object.c); // 4
 console.log(object0.isPrototypeOf(object)); // true
 ```
 ### II. Classical Inheritance
+#### Single Inheritance
 ```
 // Animal -- superclass
 function Animal(name) {
@@ -73,7 +74,6 @@ Mammal.prototype = Object.create(Animal.prototype);
 // Mammal.prototype = new Animal(); // may need arguements to have instances, less efficient
 // Mammal.prototype.constructor = Mammal;
 
-
 var mammal = new Mammal("Mammal Big", 'brown hair');
 
 mammal.saySomething();
@@ -85,4 +85,56 @@ console.log(mammal instanceof Object); // true
 console.log(mammal.hasOwnProperty('saySomething')); // false, inherited
 console.log(mammal.hasOwnProperty('name')); // true
 console.log(Animal.isPrototypeOf(Mammal)); // false
+```
+
+#### Multiple Inheritance
+```
+// Animal -- superclass
+function Animal(name) {
+  this.name = name;
+  this.size = '10';
+}
+
+// superClass method
+Animal.prototype.saySomething = function() {
+  console.log('I am ' + this.name);
+}
+
+// subclass
+function Mammal(name, hair) {
+  Animal.call(this, name); // call superclass constructor
+  this.hair = hair;
+}
+
+// subclass extends superclass
+Mammal.prototype = Object.create(Animal.prototype);
+Mammal.prototype.constructor = Mammal;
+
+// Plant -- another supperclass
+function Plant(leaves) {
+  this.leaves = leaves;
+}
+
+Plant.prototype.growInSoil = function() {
+  console.log('I may grow in Soil.');
+}
+
+// Multiple inheritance 
+function Monster(name, leaves) {
+  Animal.call(this, name);
+  Plant.call(this, leaves);
+}
+
+Monster.prototype = Object.create(Animal.prototype);
+// Mixins
+Object.assign(Monster.prototype, Plant.prototype);
+Monster.prototype.constructor = Monster;
+
+var monster = new Monster('Handsome Monster', 'Green Leaves');
+monster.saySomething();
+monster.growInSoil();
+
+console.log(monster instanceof Animal );
+console.log(monster instanceof Monster );
+console.log(monster instanceof Plant );
 ```
