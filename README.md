@@ -138,3 +138,4 @@ console.log(monster instanceof Animal );
 console.log(monster instanceof Monster );
 console.log(monster instanceof Plant );
 ```
+Reference: https://www.gellock.com/2016/01/05/javascript-inheritance-patterns/
