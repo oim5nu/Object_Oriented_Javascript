@@ -50,7 +50,7 @@ console.log(object.b); // 2, property shadowing
 console.log(object.c); // 4
 console.log(object0.isPrototypeOf(object)); // true
 ```
-### II. Classical Inheritance
+### II. Prototypal Pattern in Inheritance
 #### Single Inheritance
 ```
 // Animal -- superclass
