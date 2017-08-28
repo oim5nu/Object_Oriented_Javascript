@@ -234,3 +234,4 @@ bat.walk();
 bat.fly();
 ```
 Reference: https://www.gellock.com/2016/01/05/javascript-inheritance-patterns/
+           http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html
