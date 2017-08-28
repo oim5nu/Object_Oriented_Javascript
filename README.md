@@ -50,6 +50,7 @@ console.log(object.b); // 2, property shadowing
 console.log(object.c); // 4
 console.log(object0.isPrototypeOf(object)); // true
 ```
+
 ### II. Prototypal Pattern in Inheritance
 #### Single Inheritance
 ```
@@ -137,5 +138,99 @@ monster.growInSoil();
 console.log(monster instanceof Animal );
 console.log(monster instanceof Monster );
 console.log(monster instanceof Plant );
+```
+
+### III. Module Pattern with Inheritance, Polymorphism
+```
+// Animal -- superclass
+var AnimalModule = (function() {
+  
+  // constructor function
+  var publicAPI = function(name, legs) {
+    this.name = name || "Uknown";
+    this.legs = legs;
+  };
+  
+  publicAPI.prototype.getName = function() {
+    return this.name;
+  };
+  
+  publicAPI.prototype.talk = function() {
+    console.log('Hi, ' + this.name + ' here.');
+  };
+  
+  publicAPI.prototype.walk = function() {
+    if (this.legs) {
+      console.log('I could walk with my ' + this.legs + ' legs');
+    } else {
+      console.log('I could not walk, as I have no legs');
+    }  
+  }
+  
+  return publicAPI;
+}());
+
+// var beatle = new AnimalModule("Bettle", 4);
+// beatle.talk();
+// beatle.walk();
+ 
+// Inheritance with polymorphism 
+var MammalModule = (function(parentModule) {
+  var __super__ = parentModule.prototype;
+  var _hasHair = true;
+  
+  var publicAPI = function(name, legs) {
+    parentModule.apply(this, arguments);
+  };
+  
+  publicAPI.prototype = Object.create(__super__);
+  
+  publicAPI.prototype.talk = function() { // override talk methods
+    __super__.talk.call(this);
+    if (_hasHair) {
+      console.log('I also have hair, as I am a mammal.');
+    }
+  }
+  
+  publicAPI.prototype.walk = function() {
+    __super__.walk.call(this);
+  }
+  
+  return publicAPI;
+  
+}(AnimalModule));
+
+
+// var tiger = new MammalModule('Tiger', 4);
+// tiger.talk();
+// tiger.walk();
+
+// Inheritance with methods extension
+var fly = function(canFly) {
+  if (canFly) {
+    console.log("I could fly like birds!");
+  } else {
+    console.log("I could not fly.")
+  }
+};
+
+var SpecialMammalModule = (function(parentModule, fly) {
+  var __super__ = parentModule.prototype;
+  var _canFly = true;
+  
+  var publicAPI = function(name, legs) {
+    parentModule.apply(this, arguments);  
+  };
+  publicAPI.prototype = Object.create(__super__);
+  
+  publicAPI.prototype.fly = fly.bind(this, _canFly);
+  
+  return publicAPI;
+}(MammalModule, fly));
+
+var bat = new SpecialMammalModule('Bat', 4);
+bat.talk();
+bat.walk();
+bat.fly();
 ```
 Reference: https://www.gellock.com/2016/01/05/javascript-inheritance-patterns/
