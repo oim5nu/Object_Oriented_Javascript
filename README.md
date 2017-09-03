@@ -233,5 +233,85 @@ bat.talk();
 bat.walk();
 bat.fly();
 ```
+
+### IV Inheritance with Module Pattern using interface enforcement
+
+```
+var Interface = function(name, methods) {
+    this.name = name;
+    this.methods = [];
+
+    if (methods.constructor == Array)
+        this.methods = methods;
+    else if (methods.constructor == String)
+        this.methods[0] = methods;
+    else
+        throw new Error("Interface must define methods as a String or an Array of Strings");
+};
+
+var InterfaceHelper  = {
+    ensureImplements : function(obj, interfaces) {
+       // If interfaces is not an array, assume it's a function pointer
+       var toImplement = interfaces.constructor == Array ? interfaces : [interfaces];
+       var iface;
+
+       // For every interface that obj must implement:
+       for (var i = 0, len = toImplement.length; i < len; i++) {
+          iface = toImplement[i];
+
+          // Make sure it indeed is an interface
+          if (iface.constructor != Interface)
+             throw new Error("Object trying to implement a non-interface. "
+             + iface.name + " is not an Interface.");
+
+          // Make sure obj has all of the methods described in the interface
+          for (var j = 0, interfaceLen = iface.methods.length; j < interfaceLen; j++)
+             if (!obj[iface.methods[j]])
+                throw new Error("Interface method not implemented. " 
+                + iface.name + " defines method " + iface.methods[j]);
+       }
+
+       return true;
+    }
+};
+
+var AnimalModule = (function() {
+  
+  var publicAPI = function(mouth) {
+    this.mouth = mouth;
+  };
+  
+  publicAPI.prototype = {
+    constructor: publicAPI,
+    speak: function() {
+      if (this.mouth) {
+        console.log('I have mouth, and I could speak.');
+      } else {
+        console.log('No mouth no speak.')
+      }
+    },
+    run: function() {
+      console.log('Yes, I could run!');
+    }
+  }
+  return publicAPI;
+}()); 
+
+var tiger = new AnimalModule("Big Mouth");
+
+
+var AnimalModule = new Interface("AnimalModule", ["speak", "run", "eat"]);
+
+// may raise error, since eat has not been implemented
+function displayRoute(animal) {
+  InterfaceHelper.ensureImplements(animal, AnimalModule); 
+  animal.speak(); 
+  animal.run();
+}
+
+displayRoute(tiger);
+```
+
 Reference: https://www.gellock.com/2016/01/05/javascript-inheritance-patterns/
            http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html
+           "Pro Javascript Design Pattern" byRoss Harmes and Dustin Diaz, p47
