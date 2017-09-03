@@ -312,6 +312,7 @@ function displayRoute(animal) {
 displayRoute(tiger);
 ```
 
-Reference: https://www.gellock.com/2016/01/05/javascript-inheritance-patterns/
-           http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html
-           "Pro Javascript Design Pattern" byRoss Harmes and Dustin Diaz, p47
+Reference: 
+https://www.gellock.com/2016/01/05/javascript-inheritance-patterns/
+http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html
+"Pro Javascript Design Pattern" byRoss Harmes and Dustin Diaz, p47
